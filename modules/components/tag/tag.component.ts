@@ -39,6 +39,11 @@ export class TagComponent {
     @Input() public model: TagModel;
 
     /**
+	 * @name readonly {boolean}		
+     */		
+    @Input() public readonly: boolean;		
+
+    /**
      * @name removable {boolean}
      */
     @Input() public removable: boolean;

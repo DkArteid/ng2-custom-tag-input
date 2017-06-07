@@ -104,6 +104,13 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     @Input() public maxItems: number;
 
     /**
+     * @name readonly		
+     * @desc if set to true, the user cannot remove/addItem new items		
+     * @type {boolean}		
+     */		
+    @Input() public readonly: boolean;
+
+    /**
      * @name transform
      * @desc function passed to the component to transform the value of the items, or reject them instead
      */
@@ -534,6 +541,10 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param emit
      */
     public selectItem(item: TagModel, emit = true): void {
+        if (this.readonly) {
+            return;
+        }
+		
         const isReadonly = item && typeof item !== 'string' && item.readonly;
         if (isReadonly) {
             return;
@@ -618,7 +629,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param displayAutocomplete
      */
     public focus(applyFocus = false, displayAutocomplete = false): void {
-        this.selectItem(undefined, false);
+		if (this.readonly) {
+			return;		
+		}
+    
+		this.selectItem(undefined, false);
 
         if (applyFocus) {
             this.inputForm.focus();
