@@ -114,13 +114,6 @@ export class TagComponent {
     @Output() public onTagEdited: EventEmitter<TagModel> = new EventEmitter<TagModel>();
 
     /**
-     * @name readonly {boolean}
-     */
-    public get readonly(): boolean {
-        return typeof this.model !== 'string' && this.model.readonly === true;
-    };
-
-    /**
      * @name editModeActivated
      * @type {boolean}
      */
