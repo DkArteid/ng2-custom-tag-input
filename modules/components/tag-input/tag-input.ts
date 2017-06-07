@@ -370,10 +370,22 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     public isLoading = false;
 
     /**
+     * @name isDragging
+     * @type {boolean}
+     */
+    public isDragging = false;
+
+    /**
      * @name isDropping
      * @type {boolean}
      */
     public isDropping = false;
+
+    /**
+     * @name focused
+     * @type {boolean}
+     */
+    public focused = false;
 
     /**
      * @name inputText
@@ -622,17 +634,28 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     private getControl(): FormControl {
         return <FormControl>this.inputForm.value;
     }
-
+	
+	public onClick(): void {
+	
+		if(!this.focused){
+			return;
+		}
+		
+		this.focus(true, this.dropdown ? this.dropdown.showDropdownIfEmpty : false);
+	}
+	
+	
 	/**
      * @name focus
      * @param applyFocus
      * @param displayAutocomplete
      */
     public focus(applyFocus = false, displayAutocomplete = false): void {
-		if (this.readonly) {
+		if (this.isDragging || this.readonly) {
 			return;		
 		}
-    
+		
+		this.focused = true;
 		this.selectItem(undefined, false);
 
         if (applyFocus) {
@@ -756,6 +779,8 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      */
     public onDragStarted(event: DragEvent, index: number): void {
         event.stopPropagation();
+		
+		this.isDragging = true;
 
         const draggedElement: TagModel = this.items[index];
         const storedElement = {zone: this.dragZone, value: draggedElement};
@@ -780,6 +805,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @name onDragEnd
      */
     public onDragEnd(): void {
+		this.isDragging = false;
         this.isDropping = false;
     }
 
