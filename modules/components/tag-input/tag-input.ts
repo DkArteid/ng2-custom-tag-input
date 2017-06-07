@@ -382,6 +382,12 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     public isDropping = false;
 
     /**
+     * @name isRemoving
+     * @type {boolean}
+     */
+    public isRemoving = false;
+
+    /**
      * @name focused
      * @type {boolean}
      */
@@ -447,6 +453,8 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param index
      */
     public onRemoveRequested(tag: TagModel, index: number): void {
+		this.isRemoving = true;
+		
         if (this.onRemoving) {
             this.onRemoving(tag)
                 .subscribe((model: TagModel) => {
@@ -662,6 +670,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
             this.inputForm.focus();
             this.onFocus.emit(this.formValue);
         }
+		
+		if(this.isRemoving){
+			this.isRemoving = false;
+			return;
+		}
 
         if (displayAutocomplete && this.dropdown) {
             this.dropdown.show();
