@@ -793,6 +793,10 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     public onDragStarted(event: DragEvent, index: number): void {
         event.stopPropagation();
 		
+		if(this.readonly){
+			return;
+		}
+		
 		this.isDragging = true;
 
         const draggedElement: TagModel = this.items[index];
