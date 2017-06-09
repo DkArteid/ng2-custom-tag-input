@@ -39,11 +39,6 @@ export class TagComponent {
     @Input() public model: TagModel;
 
     /**
-	 * @name readonly {boolean}		
-     */		
-    @Input() public readonly: boolean;		
-
-    /**
      * @name removable {boolean}
      */
     @Input() public removable: boolean;
@@ -84,6 +79,11 @@ export class TagComponent {
     @Input() public disabled = false;
 
     /**
+     * @name isReadonly
+     */
+    @Input() public isReadonly = false;
+
+    /**
      * @name onSelect
      * @type {EventEmitter<TagModel>}
      */
@@ -113,6 +113,13 @@ export class TagComponent {
      */
     @Output() public onTagEdited: EventEmitter<TagModel> = new EventEmitter<TagModel>();
 
+    /**
+     * @name readonly {boolean}
+     */
+    public get readonly(): boolean {
+        return this.isReadonly || (typeof this.model !== 'string' && this.model.readonly === true);
+    };
+	
     /**
      * @name editModeActivated
      * @type {boolean}
@@ -212,11 +219,13 @@ export class TagComponent {
      * @param event
      */
     public onBlurred(event: any): void {
-        const newValue: string = event.target.innerText;
-        this.toggleEditMode();
-        const result = typeof this.model === 'string' ? newValue :
-            {[this.identifyBy]: newValue, [this.displayBy]: newValue};
-        this.onBlur.emit(result);
+		if (this.editable) {
+			const newValue: string = event.target.innerText;
+			this.toggleEditMode();
+			const result = typeof this.model === 'string' ? newValue :
+				{[this.identifyBy]: newValue, [this.displayBy]: newValue};
+			this.onBlur.emit(result);
+		}
     }
 
     /**

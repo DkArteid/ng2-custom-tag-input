@@ -108,7 +108,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @desc if set to true, the user cannot remove/addItem new items		
      * @type {boolean}		
      */		
-    @Input() public readonly: boolean;
+    @Input() public readonly: boolean = false;
 
     /**
      * @name transform
@@ -388,12 +388,6 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     public isRemoving = false;
 
     /**
-     * @name focused
-     * @type {boolean}
-     */
-    public focused = false;
-
-    /**
      * @name inputText
      * @param text
      */
@@ -560,12 +554,8 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param item
      * @param emit
      */
-    public selectItem(item: TagModel, emit = true): void {
-        if (this.readonly) {
-            return;
-        }
-		
-        const isReadonly = item && typeof item !== 'string' && item.readonly;
+    public selectItem(item: TagModel, emit = true): void {		
+        const isReadonly = this.readonly || (item && typeof item !== 'string' && item.readonly);
         if (isReadonly) {
             return;
         }
@@ -645,7 +635,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
 	
 	public onClick(): void {
 	
-		if(!this.focused){
+		if(!this.isInputFocused()){
 			return;
 		}
 		
@@ -663,7 +653,6 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
 			return;		
 		}
 		
-		this.focused = true;
 		this.selectItem(undefined, false);
 
         if (applyFocus) {
@@ -783,6 +772,10 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
             this.maxItems = this.items.length;
             console.warn(constants.MAX_ITEMS_WARNING);
         }
+		
+		if (this.onlyFromAutocomplete) {
+			this.editable = false;
+		}
     }
 
     /**3
@@ -812,7 +805,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @name onDragOver
      * @param event
      */
-    public onDragOver(event: DragEvent): void {
+    public onDragOver(event: DragEvent): void {		
+		if(this.readonly){
+			return;
+		}
+		
         this.isDropping = true;
 
         event.preventDefault();
@@ -821,7 +818,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     /**
      * @name onDragEnd
      */
-    public onDragEnd(): void {
+    public onDragEnd(): void {		
+		if(this.readonly){
+			return;
+		}
+		
 		this.isDragging = false;
         this.isDropping = false;
     }
@@ -831,7 +832,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param event
      * @param index
      */
-    public onTagDropped(event: DragEvent, index: number): void {
+    public onTagDropped(event: DragEvent, index: number): void {		
+		if(this.readonly){
+			return;
+		}
+		
         this.onDragEnd();
 
         const data = event.dataTransfer.getData(constants.DRAG_AND_DROP_KEY);
