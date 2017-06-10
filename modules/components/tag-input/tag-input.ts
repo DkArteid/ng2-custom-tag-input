@@ -745,8 +745,8 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @returns {boolean}
      */
     public get maxItemsReached(): boolean {
-        return this.maxItems !== undefined &&
-            this.items.length >= this.maxItems;
+        return this.readonly || (this.maxItems !== undefined &&
+            this.items.length >= this.maxItems);
     }
 
     /**
@@ -771,7 +771,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
         if (hasReachedMaxItems) {
             this.maxItems = this.items.length;
             console.warn(constants.MAX_ITEMS_WARNING);
-        }
+        }	
 		
 		if (this.onlyFromAutocomplete) {
 			this.editable = false;
