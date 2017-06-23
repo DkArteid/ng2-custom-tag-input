@@ -104,10 +104,10 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     @Input() public maxItems: number;
 
     /**
-     * @name readonly		
-     * @desc if set to true, the user cannot remove/addItem new items		
-     * @type {boolean}		
-     */		
+     * @name readonly
+     * @desc if set to true, the user cannot remove/addItem new items
+     * @type {boolean}
+     */
     @Input() public readonly: boolean = false;
 
     /**
@@ -447,8 +447,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param index
      */
     public onRemoveRequested(tag: TagModel, index: number): void {
-		this.isRemoving = true;
-		
+
         if (this.onRemoving) {
             this.onRemoving(tag)
                 .subscribe((model: TagModel) => {
@@ -554,7 +553,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param item
      * @param emit
      */
-    public selectItem(item: TagModel, emit = true): void {		
+    public selectItem(item: TagModel, emit = true): void {
         const isReadonly = this.readonly || (item && typeof item !== 'string' && item.readonly);
         if (isReadonly) {
             return;
@@ -632,17 +631,17 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     private getControl(): FormControl {
         return <FormControl>this.inputForm.value;
     }
-	
+
 	public onClick(): void {
-	
+
 		if(!this.isInputFocused()){
 			return;
 		}
-		
+
 		this.focus(true, this.dropdown ? this.dropdown.showDropdownIfEmpty : false);
 	}
-	
-	
+
+
 	/**
      * @name focus
      * @param applyFocus
@@ -650,16 +649,16 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      */
     public focus(applyFocus = false, displayAutocomplete = false): void {
 		if (this.isDragging || this.readonly) {
-			return;		
+			return;
 		}
-		
+
 		this.selectItem(undefined, false);
 
         if (applyFocus) {
             this.inputForm.focus();
             this.onFocus.emit(this.formValue);
         }
-		
+
 		if(this.isRemoving){
 			this.isRemoving = false;
 			return;
@@ -771,8 +770,8 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
         if (hasReachedMaxItems) {
             this.maxItems = this.items.length;
             console.warn(constants.MAX_ITEMS_WARNING);
-        }	
-		
+        }
+
 		if (this.onlyFromAutocomplete) {
 			this.editable = false;
 		}
@@ -785,11 +784,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      */
     public onDragStarted(event: DragEvent, index: number): void {
         event.stopPropagation();
-		
+
 		if(this.readonly){
 			return;
 		}
-		
+
 		this.isDragging = true;
 
         const draggedElement: TagModel = this.items[index];
@@ -805,11 +804,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @name onDragOver
      * @param event
      */
-    public onDragOver(event: DragEvent): void {		
+    public onDragOver(event: DragEvent): void {
 		if(this.readonly){
 			return;
 		}
-		
+
         this.isDropping = true;
 
         event.preventDefault();
@@ -818,11 +817,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
     /**
      * @name onDragEnd
      */
-    public onDragEnd(): void {		
+    public onDragEnd(): void {
 		if(this.readonly){
 			return;
 		}
-		
+
 		this.isDragging = false;
         this.isDropping = false;
     }
@@ -832,11 +831,11 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param event
      * @param index
      */
-    public onTagDropped(event: DragEvent, index: number): void {		
+    public onTagDropped(event: DragEvent, index: number): void {
 		if(this.readonly){
 			return;
 		}
-		
+
         this.onDragEnd();
 
         const data = event.dataTransfer.getData(constants.DRAG_AND_DROP_KEY);
@@ -917,6 +916,7 @@ export class TagInputComponent extends TagInputAccessor implements OnInit, After
      * @param index {number}
      */
     private removeItem(tag: TagModel, index: number): void {
+		this.isRemoving = true;
         this.items = this.getItemsWithout(index);
 
         // if the removed tag was selected, set it as undefined
